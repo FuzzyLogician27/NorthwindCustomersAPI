@@ -56,7 +56,26 @@ namespace NorthwindCustomersAPI.Controllers
                 return BadRequest();
             }
 
-            
+            var customerToUpdate = await _service.GetAsync(id);
+
+            if (customerToUpdate is null)
+            {
+                await PostCustomer(customer);
+            }
+            else
+            {
+                customerToUpdate.ContactName = customer.ContactName ?? customerToUpdate.ContactName;
+                customerToUpdate.CompanyName = customer.CompanyName ?? customerToUpdate.CompanyName;
+                customerToUpdate.ContactTitle = customer.ContactTitle ?? customerToUpdate.ContactTitle;
+                customerToUpdate.City = customer.City ?? customerToUpdate.City;
+                customerToUpdate.Region = customer.Region ?? customerToUpdate.Region;
+                customerToUpdate.Country = customer.Country ?? customerToUpdate.Country;
+                customerToUpdate.Fax = customer.Fax ?? customerToUpdate.Fax;
+
+                //await _service.UpdateAsync(id, customer);
+                bool customerUpdated = await _service.UpdateAsync(id, customerToUpdate);
+                if (!customerUpdated) return Problem("Failed to update the customer");
+            }
 
 
             return NoContent();
