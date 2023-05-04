@@ -26,7 +26,7 @@ namespace NorthwindCustomersAPI.Data.Repositories
             _dbSet.AddRange(customers);
         }
 
-        public async Task<Customer?> FindAsync(int id)
+        public async Task<Customer?> FindAsync(string id)
         {
             return await _dbSet.FindAsync(id);
         }

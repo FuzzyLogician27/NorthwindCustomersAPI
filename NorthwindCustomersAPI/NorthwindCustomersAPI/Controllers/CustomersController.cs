@@ -6,47 +6,44 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NorthwindCustomersAPI.Models;
+using NorthwindCustomersAPI.Models.DTO;
+using NorthwindCustomersAPI.Services;
 
 namespace NorthwindCustomersAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Customers")]
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly NorthwindContext _context;
+        private readonly NorthwindService _service;
 
-        public CustomersController(NorthwindContext context)
+        public CustomersController(NorthwindService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Customers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
-          if (_context.Customers == null)
+            var customers = await _service.GetAllAsync();
+          if (customers is null)
           {
               return NotFound();
           }
-            return await _context.Customers.ToListAsync();
+            return customers.Select(c=>Utils.CustomerToDTO(c)).ToList();
         }
 
         // GET: api/Customers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(string id)
+        public async Task<ActionResult<CustomerDTO>> GetCustomer(string id)
         {
-          if (_context.Customers == null)
+            var customer = await _service.GetAsync(id);
+          if (customer is null)
           {
               return NotFound();
           }
-            var customer = await _context.Customers.FindAsync(id);
-
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            return customer;
+            return Utils.CustomerToDTO(customer);
         }
 
         // PUT: api/Customers/5
@@ -59,7 +56,7 @@ namespace NorthwindCustomersAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(customer).State = EntityState.Modified;
+/*            _context.Entry(customer).State = EntityState.Modified;
 
             try
             {
@@ -76,62 +73,34 @@ namespace NorthwindCustomersAPI.Controllers
                     throw;
                 }
             }
-
+*/
             return NoContent();
         }
 
         // POST: api/Customers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
+        public async Task<ActionResult<Customer>> PostCustomer([Bind("CompanyName,ContactName,ContactTitle,City,Region,Country,Fax")]Customer customer)
         {
-          if (_context.Customers == null)
-          {
-              return Problem("Entity set 'NorthwindContext.Customers'  is null.");
-          }
-            _context.Customers.Add(customer);
-            try
+            var customerCreated = await _service.CreateAsync(customer);
+            if (customerCreated)
             {
-                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
             }
-            catch (DbUpdateException)
-            {
-                if (CustomerExists(customer.CustomerId))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            return Problem("Customer not created");
 
-            return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
         }
 
         // DELETE: api/Customers/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(string id)
         {
-            if (_context.Customers == null)
+            var isDeleted = await _service.DeleteAsync(id);
+            if (!isDeleted)
             {
                 return NotFound();
             }
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool CustomerExists(string id)
-        {
-            return (_context.Customers?.Any(e => e.CustomerId == id)).GetValueOrDefault();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace NorthwindCustomersAPI.Services
             return true;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string id)
         {
             if (_repository.IsNull)
             {
@@ -74,7 +74,7 @@ namespace NorthwindCustomersAPI.Services
             return entity;
         }
 
-        public async Task<Customer?> GetAsync(int id)
+        public async Task<Customer?> GetAsync(string id)
         {
             if (_repository.IsNull)
             {
@@ -92,7 +92,7 @@ namespace NorthwindCustomersAPI.Services
             return customer;
         }
 
-        public async Task<bool> UpdateAsync(int id, Customer customer)
+        public async Task<bool> UpdateAsync(string id, Customer customer)
         {
             _repository.Update(customer);
             try
@@ -113,7 +113,7 @@ namespace NorthwindCustomersAPI.Services
             return true;
         }
 
-        private async Task<bool> CustomerExists(int id)
+        private async Task<bool> CustomerExists(string id)
         {
             var supplier = await _repository.FindAsync(id);
             if (supplier is null)
