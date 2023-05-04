@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using NorthwindCustomersAPI.Models;
+
 namespace NorthwindCustomersAPI
 {
     public class Program
@@ -6,13 +9,15 @@ namespace NorthwindCustomersAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var dbConnection = builder.Configuration["ConnectionString"];
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<NorthwindContext>(opt => opt.UseSqlServer(dbConnection));
 
             var app = builder.Build();
 
