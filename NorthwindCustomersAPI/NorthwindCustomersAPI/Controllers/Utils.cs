@@ -9,8 +9,11 @@ namespace NorthwindCustomersAPI.Controllers
         {
             CompanyName = customer.CompanyName,
             FullNameAndTitle = $"{customer.ContactName} - {customer.ContactTitle}",
-            Location = $"{customer.City}, {customer.Region ?? ""}, {customer.Country}",
+            Location = Location(customer.City, customer.Region, customer.Country),
             Fax = customer.Fax
         };
+
+        private static string Location(string? city, string? region, string? country) => region is null ? $"{city}, {country}" : $"{city}, {region}, {country}";
+        
     }
 }

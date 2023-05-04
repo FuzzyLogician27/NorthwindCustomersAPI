@@ -9,7 +9,7 @@ namespace NorthwindCustomersAPI.Services
         private readonly ILogger _logger;
         private readonly ICustomerRepository _repository;
 
-        public NorthwindService(ILogger logger, ICustomerRepository repository)
+        public NorthwindService(ILogger<INorthwindService> logger, ICustomerRepository repository)
         {
             _logger = logger;
             _repository = repository;

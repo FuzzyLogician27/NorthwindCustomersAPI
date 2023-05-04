@@ -8,10 +8,10 @@ namespace NorthwindCustomersAPI.Data.Repositories
         private readonly NorthwindContext _context;
         protected readonly DbSet<Customer> _dbSet;
 
-        public CustomerRepository(NorthwindContext context, DbSet<Customer> dbSet)
+        public CustomerRepository(NorthwindContext context)
         {
             _context = context;
-            _dbSet = dbSet;
+            _dbSet = _context.Customers;
         }
 
         public bool IsNull => _dbSet == null;
