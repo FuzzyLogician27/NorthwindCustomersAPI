@@ -145,7 +145,9 @@ public class ControllerShould
 
         var sut = new CustomersController(mockService);
         var result = await sut.PostCustomer(customer);
+        var testObj = sut.Problem("Customer not created");
         Assert.That(result.Result, Is.TypeOf<ObjectResult>());
+        //Assert.That(result.Result, Is.EqualTo(sut.Problem("Customer not created")));
     }
 
     [Category("Happy Path")]
