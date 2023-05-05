@@ -10,6 +10,8 @@ using NorthwindCustomersAPI.Models.DTO;
 using NorthwindCustomersAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.HttpResults;
+using NuGet.Protocol;
+using Castle.Components.DictionaryAdapter.Xml;
 
 namespace NorthwindCustomerAPITests;
 
