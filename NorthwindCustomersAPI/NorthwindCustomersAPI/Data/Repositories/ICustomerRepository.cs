@@ -6,7 +6,7 @@ public interface ICustomerRepository
 {
     bool IsNull { get; }
     Task<IEnumerable<Customer>> GetAllAsync();
-    Task<Customer?> FindAsync(int id);
+    Task<Customer?> FindAsync(string id);
     void Add(Customer customer);
     void AddRange(IEnumerable<Customer> customers);
     void Update(Customer customer);

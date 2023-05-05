@@ -6,8 +6,8 @@ namespace NorthwindCustomersAPI.Services;
 public interface INorthwindService
 {
     Task<bool> CreateAsync(Customer customer);
-    Task<bool> UpdateAsync(int id, Customer customer);
-    Task<bool> DeleteAsync(int id);
+    Task<bool> UpdateAsync(string id, Customer customer);
+    Task<bool> DeleteAsync(string id);
     Task<IEnumerable<Customer>?> GetAllAsync();
-    Task<Customer?> GetAsync(int id);
+    Task<Customer?> GetAsync(string id);
 }
