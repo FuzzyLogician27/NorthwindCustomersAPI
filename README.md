@@ -68,6 +68,6 @@ This API was developed by Team 1 (Andrew, Danielle, Danyal, Jacob, Nooreen, Patr
 
 # Resources
 
-[Retrospectives](link here)
+[Retrospectives](https://github.com/FuzzyLogician27/NorthwindCustomersAPI/tree/main/Retrospective%20images)
 
 [Trello Board](https://trello.com/invite/b/mbr5JUMm/ATTI03b792b06155d35f1c4d8c85e750b06705D0421B/api-project-scrum-board)
