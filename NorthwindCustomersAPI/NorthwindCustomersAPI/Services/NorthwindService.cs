@@ -113,10 +113,10 @@ namespace NorthwindCustomersAPI.Services
             return true;
         }
 
-        private async Task<bool> CustomerExists(string id)
+        public async Task<bool> CustomerExists(string id)
         {
-            var supplier = await _repository.FindAsync(id);
-            if (supplier is null)
+            var customer = await _repository.FindAsync(id);
+            if (customer is null)
             {
                 return false;
             }

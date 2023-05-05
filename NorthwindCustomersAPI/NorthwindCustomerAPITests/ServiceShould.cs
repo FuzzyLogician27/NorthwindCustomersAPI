@@ -142,11 +142,200 @@ public class ServiceShould
             .Get(mockRepository)
             .Setup(c => c.IsNull)
             .Returns(false);
-        Mock.Get(mockRepository).Setup(c => c.SaveAsync()).Throws<Exception>();
+
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.SaveAsync())
+            .Throws<Exception>();
 
         var _sut = new NorthwindService(mockLogger, mockRepository);
         var result = await _sut.CreateAsync(Mock.Of<Customer>());
         Assert.That(result, Is.False);
     }
 
+    [Category("Happy Path")]
+    [Category("DeleteCustomer")]
+    [Test]
+    public async Task DeleteAsync_DeletingValidCustomer_ReturnsTrue()
+    {
+        var mockRepository = GetRepository();
+        var mockLogger = GetLogger();
+
+        List<Customer> customers = new List<Customer> 
+        { 
+            new Customer { CustomerId = "Test", CompanyName = "Test", ContactName = "Test" },
+            new Customer { CustomerId = "Test2", CompanyName = "Test2", ContactName = "Test2" }
+        };
+
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.FindAsync("Test").Result)
+            .Returns(customers[0]);
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.Remove(customers[0]));
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.IsNull)
+            .Returns(false);
+
+        var _sut = new NorthwindService(mockLogger, mockRepository);
+        var result = await _sut.DeleteAsync("Test");
+        Assert.That(result, Is.True);
+    }
+
+    [Category("Sad Path")]
+    [Category("DeleteCustomer")]
+    [Test]
+    public async Task DeleteAsync_DeletingInvalidCustomer_ReturnsFalse()
+    {
+        var mockRepository = GetRepository();
+        var mockLogger = GetLogger();
+
+        List<Customer> customers = new List<Customer>
+        {
+            new Customer { CustomerId = "Test", CompanyName = "Test", ContactName = "Test" },
+            new Customer { CustomerId = "Test2", CompanyName = "Test2", ContactName = "Test2" }
+        };
+
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.FindAsync("Test3").Result);
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.IsNull)
+            .Returns(false);
+
+        var _sut = new NorthwindService(mockLogger, mockRepository);
+        var result = await _sut.DeleteAsync("Test3");
+        Assert.That(result, Is.False);
+    }
+
+    [Category("Sad Path")]
+    [Category("DeleteCustomer")]
+    [Test]
+    public async Task DeleteAsync_SaveThrowsAnError_ReturnsFalse()
+    {
+        var mockRepository = GetRepository();
+        var mockLogger = GetLogger();
+
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.IsNull)
+            .Returns(false);
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.SaveAsync())
+            .Throws<Exception>();
+
+        var _sut = new NorthwindService(mockLogger, mockRepository);
+        var result = await _sut.DeleteAsync(Mock.Of<Customer>().CustomerId);
+        Assert.That(result, Is.False);
+    }
+
+    [Category("Happy Path")]
+    [Category("CustomerExists")]
+    [Test]
+    public async Task CustomerExists_FindValidCustomer_ReturnsTrue()
+    {
+        var mockRepository = GetRepository();
+        var mockLogger = GetLogger();
+
+        List<Customer> customers = new List<Customer>
+        {
+            new Customer { CustomerId = "Test", CompanyName = "Test", ContactName = "Test" },
+            new Customer { CustomerId = "Test2", CompanyName = "Test2", ContactName = "Test2" }
+        };
+
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.FindAsync("Test").Result)
+            .Returns(customers[0]);
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.IsNull)
+            .Returns(false);
+
+        var _sut = new NorthwindService(mockLogger, mockRepository);
+        var result = await _sut.CustomerExists("Test");
+        Assert.That(result, Is.True);
+    }
+
+    [Category("Sad Path")]
+    [Category("CustomerExists")]
+    [Test]
+    public async Task CustomerExists_FindInvalidCustomer_ReturnsFalse()
+    {
+        var mockRepository = GetRepository();
+        var mockLogger = GetLogger();
+
+        List<Customer> customers = new List<Customer>
+        {
+            new Customer { CustomerId = "Test", CompanyName = "Test", ContactName = "Test" },
+            new Customer { CustomerId = "Test2", CompanyName = "Test2", ContactName = "Test2" }
+        };
+
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.FindAsync("Test3").Result);
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.IsNull)
+            .Returns(false);
+
+        var _sut = new NorthwindService(mockLogger, mockRepository);
+        var result = await _sut.CustomerExists("Test3");
+        Assert.That(result, Is.False);
+    }
+
+
+    [Category("Happy Path")]
+    [Category("UpdateCustomer")]
+    [Test]
+    public async Task UpdateAsync_UpdateValidCustomer_ReturnsTrue()
+    {
+        var mockRepository = GetRepository();
+        var mockLogger = GetLogger();
+
+        List<Customer> customers = new List<Customer>
+        {
+            new Customer { CustomerId = "Test", CompanyName = "Test", ContactName = "Test" },
+            new Customer { CustomerId = "Test2", CompanyName = "Test2", ContactName = "Test2" }
+        };
+
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.Update(customers[0]));
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.IsNull)
+            .Returns(false);
+
+        var _sut = new NorthwindService(mockLogger, mockRepository);
+        var result = await _sut.UpdateAsync("Test", customers[0]);
+        Assert.That(result, Is.True);
+    }
+
+    [Category("Sad Path")]
+    [Category("UpdateCustomer")]
+    [Test]
+    [Ignore("Incorrect")]
+    public async Task UpdateAsync_UpdateInvalidCustomer_ReturnsFalse()
+    {
+        var mockRepository = GetRepository();
+        var mockLogger = GetLogger();
+
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.FindAsync("Test3").Result);
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.IsNull)
+            .Returns(false);
+        
+
+        var _sut = new NorthwindService(mockLogger, mockRepository);
+        var result = await _sut.UpdateAsync("Test3", Mock.Of<Customer>());
+        Assert.That(result, Is.False);
+    }
 }
