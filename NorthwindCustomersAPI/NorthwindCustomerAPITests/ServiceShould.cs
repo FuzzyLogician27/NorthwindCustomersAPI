@@ -110,7 +110,7 @@ public class ServiceShould
     //{
     //    var mockRepository = GetRepository();
     //    var mockLogger = GetLogger();
-        
+
 
     //    List<Customer> customers = new List<Customer> { It.IsAny<Customer>() };
 
@@ -126,8 +126,27 @@ public class ServiceShould
 
     //    var mockCustomerService = new Mock<INorthwindService>();
 
-    //    mockCustomerService.Verify(mockRepository.Add(Mock.Of<Customer>()), Times.AtLeastOnce);
+    //    mockCustomerService.Verify(mockRepository.Add(Mock.Of<Customer>), Times.AtLeastOnce);
 
     //}
+
+    [Category("Sad Path")]
+    [Category("CreateCustomer")]
+    [Test]
+    public async Task CreateAsync_SaveThrowsAnError_ReturnsTrue()
+    {
+        var mockRepository = GetRepository();
+        var mockLogger = GetLogger();
+
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.IsNull)
+            .Returns(false);
+        Mock.Get(mockRepository).Setup(c => c.SaveAsync()).Throws<Exception>();
+
+        var _sut = new NorthwindService(mockLogger, mockRepository);
+        var result = await _sut.CreateAsync(Mock.Of<Customer>());
+        Assert.That(result, Is.False);
+    }
 
 }
