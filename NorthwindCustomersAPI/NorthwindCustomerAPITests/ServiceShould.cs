@@ -10,6 +10,16 @@ namespace NorthwindCustomerAPITests;
 
 public class ServiceShould
 {
+    private static ILogger<INorthwindService> GetLogger()
+    {
+        return Mock.Of<ILogger<INorthwindService>>();
+    }
+
+    private static ICustomerRepository GetRepository()
+    {
+        return Mock.Of<ICustomerRepository>();
+    }
+
     [Category("Happy Path")]
     [Category("GetSuppliers")]
     [Test]
@@ -31,13 +41,53 @@ public class ServiceShould
         var result = await _sut.GetAllAsync();
         Assert.That(result, Is.InstanceOf<IEnumerable<Customer>>());
     }
-    private static ILogger<INorthwindService> GetLogger()
-    {
-        return Mock.Of<ILogger<INorthwindService>>();
-    }
 
-    private static ICustomerRepository GetRepository()
+    /*[Category("Sad Path")]
+    [Category("GetSuppliers")]
+    [Test]
+    public async Task GetAllAsync_WhenThereAreNoCustomers_ReturnsLoggerWarning()
     {
-        return Mock.Of<ICustomerRepository>();
+        var mockRepository = GetRepository();
+        var mockLogger = GetLogger();
+        List<Customer> customers = new List<Customer> { It.IsAny<Customer>() };
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.GetAllAsync().Result)
+            .Returns(customers);
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.IsNull)
+            .Returns(false);
+        Mock
+            .Get(mockLogger)
+            .Setup(c => c.LogWarning("No customers found."))
+
+        var _sut = new NorthwindService(mockLogger, mockRepository);
+        var result = await _sut.GetAllAsync();
+        Assert.That(result, Is.InstanceOf<IEnumerable<Customer>>());
+
+
+    }*/
+
+    [Category("Happy Path")]
+    [Category("GetSuppliers")]
+    [Test]
+    public async Task GetAsync_WhenThereIsACustomer_ReturnsCustomer()
+    {
+        var mockRepository = GetRepository();
+        var mockLogger = GetLogger();
+        var customer = new Customer { CustomerId = "Test", CompanyName = "Test", ContactName = "Test" };
+
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.FindAsync("Test").Result).Returns(customer);
+        Mock
+            .Get(mockRepository)
+            .Setup(c => c.IsNull)
+            .Returns(false);
+
+        var _sut = new NorthwindService(mockLogger, mockRepository);
+        var result = await _sut.GetAllAsync();
+        Assert.That(result, Is.InstanceOf<IEnumerable<Customer>>());
     }
 }

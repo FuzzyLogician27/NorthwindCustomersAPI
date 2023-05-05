@@ -69,7 +69,7 @@ namespace NorthwindCustomersAPI.Services
             var entity = (await _repository.GetAllAsync());
             if (entity == null)
             {
-                _logger.LogWarning($"{typeof(Customer).Name} was not found.");
+                _logger.LogWarning("No customers found.");
             }
             return entity;
         }
