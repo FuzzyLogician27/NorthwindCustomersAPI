@@ -43,6 +43,31 @@ DELETE /customers/{id}
 Deletes a customer from the database by their id.
 <br></br>
 
+# Teamwork and splitting of responsibility
+### Service Layer 
+Courtesy of Patrick, Talal and Danielle
+_____
+### Repository Layer 
+Courtesy of Danyal, Andrew, Jacob and Nooreen
+_____
+### Program and CustomerController
+Horde Programming
+_____
+### Repository Tests
+Courtesy of Jacob, Danyal and Danielle
+_____
+### Service Tests
+Courtesy of Nooreen and Talal
+_____
+### Controller Tests
+Courtesy of Andrew and Patrick
+
 # Credits and Special Thanks
 
-This API was developed by Team 1 (Andrew, Danielle, Danyal, Jacob, Nooreen, Patrick and Talal) as part of a project for Tech211. Special thanks to Peter B for helping to work out some issues in early development.
+This API was developed by Team 1 (Andrew, Danielle, Danyal, Jacob, Nooreen, Patrick and Talal) as part of a project for Tech211. Special thanks to Peter B for helping to work out some issues in early development and special thanks to Jacob for being our floater during 1-1's and thanks to Danielle for writing the README.
+
+# Resources
+
+[Retrospectives](link here)
+
+[Trello Board](https://trello.com/invite/b/mbr5JUMm/ATTI03b792b06155d35f1c4d8c85e750b06705D0421B/api-project-scrum-board)
